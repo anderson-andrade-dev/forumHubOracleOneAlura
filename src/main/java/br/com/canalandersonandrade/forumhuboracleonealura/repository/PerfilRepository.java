@@ -14,5 +14,5 @@ import java.util.Optional;
  */
 public interface PerfilRepository extends JpaRepository<Perfil, Long> {
 
-    Optional<Perfil> findByNomeContainsIgnoreCase(String nome);
+    Optional<Perfil> findByNomeEqualsIgnoreCase(String nome);
 }

@@ -32,8 +32,6 @@ public class Curso {
         this.categoria = categoria;
     }
 
-    public Curso(@Nonnull @Negative Long id, @Nonnull @NotBlank String nome, @Nonnull @NotBlank String categoria) {
-    }
 
     public Long getId() {
         return id;

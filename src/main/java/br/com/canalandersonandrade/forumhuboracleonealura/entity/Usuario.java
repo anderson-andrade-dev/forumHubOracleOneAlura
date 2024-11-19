@@ -22,7 +22,7 @@ public class Usuario {
     private String email;
     @Column(length = 200, nullable = false)
     private String senha;
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, orphanRemoval = true)
+    @ManyToMany (cascade = CascadeType.MERGE)
     private List<Perfil> perfis;
     @Deprecated
     protected Usuario() {
@@ -100,7 +100,6 @@ public class Usuario {
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", senha='" + senha + '\'' +
-                ", perfis=" + perfis +
                 '}';
     }
 }

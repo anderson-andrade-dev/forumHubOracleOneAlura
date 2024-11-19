@@ -31,24 +31,21 @@ public class UsuarioService {
 
 
     public DadosUsuarioCadastrado cadastrar(DadosUsuario dadosUsuario) {
-
         List<Perfil> perfis = dadosUsuario.perfils()
                 .stream()
-                .map(p -> perfilRepository.findByNomeContainsIgnoreCase(p.nome()).get())
+                .map(p -> perfilRepository.findByNomeEqualsIgnoreCase(p.nome())
+                        .orElse(new Perfil(p.nome(), Nivel.buscaPorValor(p.nivel()))))
                 .toList();
-        System.out.println(perfis);
+
+        perfilRepository.saveAll(perfis);
+
         var usuario = new Usuario(dadosUsuario.nome(), dadosUsuario.email(), dadosUsuario.senha(), perfis);
 
-       // usuario = usuarioRepository.save(usuario);
+        usuario = usuarioRepository.save(usuario);
 
         return new DadosUsuarioCadastrado(usuario.getId(), usuario.getNome(), usuario.getEmail());
 
 
     }
 
-    private List<Perfil> converterPerfilRecordEmPerfil(List<PerfilRecord> perfils) {
-        return perfils.stream()
-                .map(p -> new Perfil(p.nome(), Nivel.buscaPorValor(p.nivel())))
-                .toList();
-    }
 }

@@ -1,5 +1,6 @@
 package br.com.canalandersonandrade.forumhuboracleonealura.entity;
 
+import br.com.canalandersonandrade.forumhuboracleonealura.enums.Categoria;
 import br.com.canalandersonandrade.forumhuboracleonealura.records.TopicoRecord;
 import br.com.canalandersonandrade.forumhuboracleonealura.uteis.DataUtil;
 import jakarta.annotation.Nonnull;
@@ -26,12 +27,11 @@ public class Topico {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dataCriacao;
     private boolean status;
-    @ManyToOne
-    @JoinColumn(name = "autor_id")
+    @OneToOne
     private Autor autor;
     @OneToOne
     private Curso curso;
-    @OneToMany(mappedBy = "topico", fetch = FetchType.EAGER, cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Resposta> respostas;
 
     @Deprecated
@@ -54,8 +54,15 @@ public class Topico {
         this.mensagem = topicoRecord.mensagem();
         this.dataCriacao = DataUtil.converter(topicoRecord.dataCriacao());
         this.status = topicoRecord.status();
-        this.autor = new Autor(topicoRecord.autor().id(), topicoRecord.autor().nome());
-        this.curso = new Curso(topicoRecord.curso().id(), topicoRecord.curso().nome(), topicoRecord.curso().categoria());
+        this.autor = new Autor(topicoRecord.autor().nome());
+        this.curso = new Curso(topicoRecord.curso().nome(), Categoria.PROGRAMACAO);
+    }
+
+    public Topico(String titulo, String mensagem, Autor autor, Curso curso) {
+        this.titulo = titulo;
+        this.mensagem = mensagem;
+        this.autor = autor;
+        this.curso = curso;
     }
 
     public Long getId() {
@@ -143,9 +150,6 @@ public class Topico {
                 ", mensagem='" + mensagem + '\'' +
                 ", dataCriacao=" + dataCriacao +
                 ", status=" + status +
-                ", autor=" + autor +
-                ", curso=" + curso +
-                ", respostas=" + respostas +
                 '}';
     }
 }

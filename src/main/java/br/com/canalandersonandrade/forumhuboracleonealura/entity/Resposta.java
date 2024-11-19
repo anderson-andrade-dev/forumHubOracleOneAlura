@@ -74,7 +74,6 @@ public class Resposta {
         return "Resposta{" +
                 "id=" + id +
                 ", mensagem='" + mensagem + '\'' +
-                ", topico=" + topico +
                 '}';
     }
 }

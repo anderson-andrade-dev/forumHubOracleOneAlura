@@ -3,7 +3,6 @@ package br.com.canalandersonandrade.forumhuboracleonealura.entity;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -17,8 +16,7 @@ public class Autor {
     private Long id;
     @Column(nullable = false, length = 200)
     private String nome;
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
-    private List<Topico> topicos;
+
 
     @Deprecated
     protected Autor(){
@@ -26,7 +24,7 @@ public class Autor {
     }
 
 
-    public Autor(@Nonnull Long id, @Nonnull String nome) {
+    public Autor(@Nonnull String nome) {
         this.id = id;
         this.nome = nome;
     }
@@ -52,20 +50,12 @@ public class Autor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Autor autor = (Autor) o;
-        return Objects.equals(id, autor.id) && Objects.equals(nome, autor.nome) && Objects.equals(topicos, autor.topicos);
+        return Objects.equals(id, autor.id) && Objects.equals(nome, autor.nome);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, topicos);
-    }
-
-    public List<Topico> getTopicos() {
-        return topicos;
-    }
-
-    public void setTopicos(List<Topico> topicos) {
-        this.topicos = topicos;
+        return Objects.hash(id, nome);
     }
 
     @Override
@@ -73,7 +63,6 @@ public class Autor {
         return "Autor{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
-                ", topicos=" + topicos +
                 '}';
     }
 }
