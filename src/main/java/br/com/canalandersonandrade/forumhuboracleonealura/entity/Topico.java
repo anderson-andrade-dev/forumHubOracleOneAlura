@@ -63,6 +63,7 @@ public class Topico {
         this.mensagem = mensagem;
         this.autor = autor;
         this.curso = curso;
+        this.dataCriacao = LocalDateTime.now();
     }
 
     public Long getId() {

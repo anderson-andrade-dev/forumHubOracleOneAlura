@@ -4,6 +4,8 @@ import br.com.canalandersonandrade.forumhuboracleonealura.entity.Autor;
 import br.com.canalandersonandrade.forumhuboracleonealura.entity.Curso;
 import br.com.canalandersonandrade.forumhuboracleonealura.entity.Topico;
 import br.com.canalandersonandrade.forumhuboracleonealura.enums.Categoria;
+import br.com.canalandersonandrade.forumhuboracleonealura.records.DadosAtualizacao;
+import br.com.canalandersonandrade.forumhuboracleonealura.records.DadosRetornoTopico;
 import br.com.canalandersonandrade.forumhuboracleonealura.records.DadosTopico;
 import br.com.canalandersonandrade.forumhuboracleonealura.repository.AutorRepository;
 import br.com.canalandersonandrade.forumhuboracleonealura.repository.CursoRepository;
@@ -24,7 +26,7 @@ public class TopicoService {
     private final AutorRepository autorRepository;
     private final CursoRepository cursoRepository;
 
-    public TopicoService(TopicoRepository topicoRepository, AutorRepository autorRepository,CursoRepository cursoRepository) {
+    public TopicoService(TopicoRepository topicoRepository, AutorRepository autorRepository, CursoRepository cursoRepository) {
         this.topicoRepository = topicoRepository;
         this.autorRepository = autorRepository;
         this.cursoRepository = cursoRepository;
@@ -33,7 +35,7 @@ public class TopicoService {
     public Optional<Topico> salvar(DadosTopico dadosTopico) {
         Autor autor = new Autor(dadosTopico.autor());
         autorRepository.save(autor);
-        Curso curso = new Curso(dadosTopico.curso(),Categoria.PROGRAMACAO);
+        Curso curso = new Curso(dadosTopico.curso(), Categoria.PROGRAMACAO);
         cursoRepository.save(curso);
         Topico topico = new Topico(dadosTopico.titulo(), dadosTopico.mensagem(), autor, curso);
         topicoRepository.save(topico);
@@ -42,9 +44,56 @@ public class TopicoService {
 
     public List<Topico> todosTopicos() {
         var topicos = topicoRepository.findAll();
-        if(topicos != null){
+        if (topicos != null) {
             return topicos;
         }
         return List.of();
+    }
+
+    public DadosRetornoTopico buscaPorId(Long id) {
+        var topico = topicoRepository.findById(id);
+
+        if (!topico.isPresent()) {
+            throw new IllegalArgumentException("Verifique o id do topico pois ele não existe no banco!");
+        }
+
+        var topicoPresente = topico.get();
+
+        return new DadosRetornoTopico(topicoPresente.getTitulo(), topicoPresente.getMensagem(), topicoPresente.getDataCriacao(), topicoPresente.isStatus(), topicoPresente.getAutor(), topicoPresente.getCurso());
+    }
+
+    public DadosRetornoTopico atualizar(Long id, DadosAtualizacao dadosAtualizacao) {
+        Optional<Topico> topico = topicoRepository.findById(id);
+
+        if (!topico.isPresent()) {
+            throw new IllegalArgumentException("ID invalido não existe no banco.");
+        }
+
+        var topicoVindoDaBanco = topico.get();
+
+        topicoVindoDaBanco.setTitulo(dadosAtualizacao.titulo());
+        topicoVindoDaBanco.setMensagem(dadosAtualizacao.mensagem());
+
+        topicoRepository.save(topicoVindoDaBanco);
+
+        return new DadosRetornoTopico(
+                topicoVindoDaBanco.getTitulo(),
+                topicoVindoDaBanco.getMensagem(),
+                topicoVindoDaBanco.getDataCriacao(),
+                topicoVindoDaBanco.isStatus(),
+                topicoVindoDaBanco.getAutor(),
+                topicoVindoDaBanco.getCurso()
+        );
+    }
+
+    public void deletar(Long id) {
+        var topicoVindoBando = topicoRepository.findById(id);
+
+        if(!topicoVindoBando.isPresent()){
+            throw new IllegalArgumentException("Id invalido ele não existe no banco!");
+        }
+
+        topicoRepository.delete(topicoVindoBando.get());
+
     }
 }

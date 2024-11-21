@@ -1,14 +1,13 @@
 package br.com.canalandersonandrade.forumhuboracleonealura.controller;
 
-import br.com.canalandersonandrade.forumhuboracleonealura.entity.Topico;
+import br.com.canalandersonandrade.forumhuboracleonealura.records.DadosAtualizacao;
 import br.com.canalandersonandrade.forumhuboracleonealura.records.DadosRetornoTopico;
 import br.com.canalandersonandrade.forumhuboracleonealura.records.DadosTopico;
 import br.com.canalandersonandrade.forumhuboracleonealura.service.TopicoService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 /**
  * @author Anderson Andrade Dev
@@ -34,32 +33,43 @@ public class ForumController {
 
     @GetMapping("/topicos")
     public ResponseEntity todoTopicosCriados() {
-      return ResponseEntity.ok(topicoService.todosTopicos());
+        return ResponseEntity.ok(topicoService.todosTopicos());
     }
 
-    public void buscarTopico() {
-
+    @GetMapping("/topicos/{id}")
+    public ResponseEntity buscarTopico(@PathVariable @Valid Long id) {
+        DadosRetornoTopico topico = topicoService.buscaPorId(id);
+        return ResponseEntity.ok(topico);
     }
 
-    public void atualizarTopico() {
+    @PutMapping("/topicos/{id}")
+    public ResponseEntity atualizarTopico(@PathVariable Long id, @RequestBody DadosAtualizacao dadosAtualizacao) {
 
+        var dadosTopicoRetorno = topicoService.atualizar(id, dadosAtualizacao);
+
+        return ResponseEntity.ok(dadosTopicoRetorno);
     }
 
-}
+    @DeleteMapping("/topicos/{id}")
+    public ResponseEntity deletarTopico(@PathVariable Long id){
+
+        topicoService.deletar(id);
+
+        return ResponseEntity.ok("Topico deletado com sucesso!");
+    }
 
 /*
-Listagem de tópicos
-A API deve possuir um endpoint para a listagem de todos os tópicos, sendo que ele deve aceitar requisições do tipo GET para a URI /topicos
+Exclusão de tópico
+A API deve possuir um endpoint para a exclusão de um determinado tópico, sendo que ele deve aceitar requisições do tipo DELETE para a URI /topicos/{id}.
 
-Os dados dos tópicos (título, mensagem, data de criação, status, autor e curso) devem ser devolvidos no corpo da resposta, no formato JSON.
+Como estamos realizando uma consulta no banco para então atualizar um tópico, é necessário solicitar e verificar o campo ID de sua requisição.
 
-→ Lembrando que ao tratar do CRUD é necessário trabalhar com o JpaRepository associado ao tópico, em especial na listagem dos dados do banco de dados utilizamos o método findAll.
+No código do projeto, sugerimos como no card de Detalhamento de Tópicos o uso da anotação @PathVariable para obter o ID da requisição PUT.
 
-Opcionais:
+→ Lembre-se de verificar se o tópico existe no banco de dados para realizar sua atualização. Neste caso, sugerimos a utilização do método isPresent() da classe Java chamada Optional.
 
-Que tal exibir os 10 primeiros resultados ordenados pela data de criação do tópico em ordem ASC?
-
-Que tal mostrar os resultados usando um critério de busca? Sugerimos listar por: nome de curso e ano específico.
-
-Mais um opcional: Que tal praticar a listagem dos resultados com paginação? Utilizando a anotação@PageableDefault em seu código para manejar o volume de dados apresentados para o usuário.
+Por fim, por se tratar de uma exclusão de um item específico do banco, vale ressaltar a importância do uso do método deleteById do JpaRepository.
  */
+
+
+}
