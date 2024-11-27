@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +37,7 @@ public class Usuario implements UserDetails {
     public Usuario(String nome, String email, String senha, List<Perfil> perfis) {
         this.nome = nome;
         this.email = email;
-        this.senha = senha;
+        this.senha = new BCryptPasswordEncoder().encode(senha);;
         this.perfis = perfis;
     }
 

@@ -24,8 +24,6 @@ public class CadastroController {
 
     @PostMapping
     public ResponseEntity cadastrar(@RequestBody @Nonnull DadosUsuario dadosUsuario){
-      System.out.println(dadosUsuario.nome());
-      System.out.println(dadosUsuario.email());
       return ResponseEntity.ok(usuarioService.cadastrar(dadosUsuario));
     }
 
