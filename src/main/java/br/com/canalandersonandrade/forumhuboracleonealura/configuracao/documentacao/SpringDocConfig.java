@@ -20,7 +20,7 @@ public class SpringDocConfig {
     public OpenAPI configDoc(){
         return new OpenAPI()
                 .info(new Info()
-                        .title("Forum Oracle ONE")
+                        .title("Forum Oracle One ")
                         .version("1.0.0")
                         .description("Aplicação do Curso Oracle ONE"))
                 .components(new Components()
