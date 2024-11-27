@@ -12,8 +12,5 @@ import java.util.Optional;
  */
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    @Query("""
-            SELECT u FROM Usuario u WHERE u.email = :login
-                """)
-    Optional<Usuario> findByLogin(String login);
+    Optional<Usuario> findByEmail(String email);
 }
