@@ -5,13 +5,12 @@ import br.com.canalandersonandrade.forumhuboracleonealura.entity.Usuario;
 import br.com.canalandersonandrade.forumhuboracleonealura.enums.Nivel;
 import br.com.canalandersonandrade.forumhuboracleonealura.records.DadosUsuario;
 import br.com.canalandersonandrade.forumhuboracleonealura.records.DadosUsuarioCadastrado;
-import br.com.canalandersonandrade.forumhuboracleonealura.records.PerfilRecord;
 import br.com.canalandersonandrade.forumhuboracleonealura.repository.PerfilRepository;
 import br.com.canalandersonandrade.forumhuboracleonealura.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,10 +22,12 @@ import java.util.List;
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PerfilRepository perfilRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PerfilRepository perfilRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PerfilRepository perfilRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.perfilRepository = perfilRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -39,7 +40,9 @@ public class UsuarioService {
 
         perfilRepository.saveAll(perfis);
 
-        var usuario = new Usuario(dadosUsuario.nome(), dadosUsuario.email(), dadosUsuario.senha(), perfis);
+        var senhaEnconder = passwordEncoder.encode(dadosUsuario.senha());
+
+        var usuario = new Usuario(dadosUsuario.nome(), dadosUsuario.email(), senhaEnconder, perfis);
 
         usuario = usuarioRepository.save(usuario);
 

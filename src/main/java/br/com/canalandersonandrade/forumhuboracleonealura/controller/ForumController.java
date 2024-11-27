@@ -58,18 +58,5 @@ public class ForumController {
         return ResponseEntity.ok("Topico deletado com sucesso!");
     }
 
-/*
-Exclusão de tópico
-A API deve possuir um endpoint para a exclusão de um determinado tópico, sendo que ele deve aceitar requisições do tipo DELETE para a URI /topicos/{id}.
-
-Como estamos realizando uma consulta no banco para então atualizar um tópico, é necessário solicitar e verificar o campo ID de sua requisição.
-
-No código do projeto, sugerimos como no card de Detalhamento de Tópicos o uso da anotação @PathVariable para obter o ID da requisição PUT.
-
-→ Lembre-se de verificar se o tópico existe no banco de dados para realizar sua atualização. Neste caso, sugerimos a utilização do método isPresent() da classe Java chamada Optional.
-
-Por fim, por se tratar de uma exclusão de um item específico do banco, vale ressaltar a importância do uso do método deleteById do JpaRepository.
- */
-
 
 }
